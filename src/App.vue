@@ -60,12 +60,12 @@ export default {
       this.notes = this.generateRandomNotes()
       this.result = ''
       this.correctNotes = []
-      console.log(this.notes)
+      this.playNotes()
     },
     generateRandomNotes() {
       ; (new AudioContext()).resume()
       const possibleNotes = ['C', 'D', 'E', 'F', 'G', 'A', 'B']
-      const octaves = [3, 4, 5]
+      const octaves = [2, 3, 4, 5]
       let notes = []
 
       for (let i = 0; i < 8; i++) {
