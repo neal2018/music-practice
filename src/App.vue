@@ -65,7 +65,7 @@ export default {
     generateRandomNotes() {
       ; (new AudioContext()).resume()
       const possibleNotes = ['C', 'D', 'E', 'F', 'G', 'A', 'B']
-      const octaves = [2, 3, 4, 5]
+      const octaves = [3, 4, 5]
       let notes = []
 
       for (let i = 0; i < 8; i++) {
