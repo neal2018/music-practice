@@ -15,18 +15,19 @@
       </div>
       <button style="margin: 10px;" @click="playNotes" :disabled="notes.length === 0">Play</button>
       <button style="margin: 10px;" @click="generateNewNotes">Next</button>
+      <button style="margin: 10px;" @click="generateOpenNewNotes">Next (Open)</button>
       <div class="notes">
         <div v-for="(note, index) in detectedNotes" :key="index"
           :style="{ backgroundColor: getColorForNote(note[0]), opacity: 0.8 }"
           :class="{ 'playing': isNoteLastPlaying(index) }" class="note-square">
           <div class="note">{{ note[0] }}</div>
           <div class="frequency">{{ note[1] < 10000 ? note[1].toFixed(2) : note[1].toFixed(0) }} Hz</div>
+          </div>
+        </div>
+        <div>
+          <p>{{ result }}</p>
         </div>
       </div>
-      <div>
-        <p>{{ result }}</p>
-      </div>
-    </div>
 </template>
 
 <script>
@@ -56,6 +57,7 @@ export default {
   },
   methods: {
     generateNewNotes() {
+      ; (new AudioContext()).resume()
       this.currentNoteIndex = -1
       this.notes = this.generateRandomNotes()
       this.result = ''
@@ -63,7 +65,6 @@ export default {
       this.playNotes()
     },
     generateRandomNotes() {
-      ; (new AudioContext()).resume()
       const possibleNotes = ['C', 'D', 'E', 'F', 'G', 'A', 'B']
       const octaves = [3, 4, 5]
       let notes = []
@@ -71,12 +72,23 @@ export default {
       for (let i = 0; i < 8; i++) {
         const note = possibleNotes[Math.floor(Math.random() * possibleNotes.length)]
         const octave = octaves[Math.floor(Math.random() * octaves.length)]
-        const frequency = Tone.Frequency(`${note}${octave}`).toFrequency() // Calculate frequency
-
+        const frequency = Tone.Frequency(`${note}${octave}`).toFrequency()
         notes.push([`${note}${octave}`, frequency])
       }
-      console.log(notes)
       return notes
+    },
+    generateOpenNewNotes() {
+      this.currentNoteIndex = -1
+      this.notes = []
+      const possibleNotes = ["E4", "B3", "G3", "D3", "A2", "E2"]
+      for (let i = 0; i < 8; i++) {
+        const note = possibleNotes[Math.floor(Math.random() * possibleNotes.length)]
+        const frequency = Tone.Frequency(note).toFrequency()
+        this.notes.push([note, frequency])
+      }
+      this.result = ''
+      this.correctNotes = []
+      this.playNotes()
     },
     getColorForNote(note) {
       return this.noteColors[note[0]]
